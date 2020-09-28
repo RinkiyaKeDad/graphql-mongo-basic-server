@@ -1,6 +1,9 @@
 const express = require('express');
-const graphqlHttp = require('express-graphql');
+const graphqlHttp = require('express-graphql').graphqlHTTP;
+const mongoose = require('mongoose');
 const graphqlSchema = require('./graphql/schema');
+require('dotenv').config();
+
 const graphqlResolvers = require('./graphql/resolvers');
 
 const app = express();
@@ -13,8 +16,15 @@ app.use(
     graphiql: true,
   })
 );
+const dbPath = process.env.MONGODB_CONNECTION_STRING; // Add MongoDB Path HERE.
 
-app.listen(3000, () => console.log('Server is running on localhost:3000'));
+const options = { useNewUrlParser: true, useUnifiedTopology: true };
+mongoose
+  .connect(dbPath, options)
+  .then(() => app.listen(3000, console.log('Server is running')))
+  .catch(error => {
+    throw error;
+  });
 
 // We import the schema and resolvers created earlier and to use them, we need graphqlHttp (name it whatever you want).
 // It's a method provided by express-graphql that expects some options.
