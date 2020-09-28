@@ -1,3 +1,5 @@
+//A schema describes the stuff. Schema file is a collecion of types, queries and mutations.
+
 const { buildSchema } = require('graphql');
 
 module.exports = buildSchema(`
